@@ -2,7 +2,7 @@ package ru.rsreu.jackal.models
 
 data class LobbyMemberInfo(
     val userId: Long,
-    val status: LobbyMemberStatus
+    val status: LobbyMemberStatus = LobbyMemberStatus.NOT_CONNECTED
 )
 
 enum class LobbyMemberStatus{

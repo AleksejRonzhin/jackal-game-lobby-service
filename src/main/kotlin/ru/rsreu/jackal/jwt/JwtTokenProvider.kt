@@ -1,4 +1,4 @@
-package ru.rsreu.jackal
+package ru.rsreu.jackal.jwt
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
