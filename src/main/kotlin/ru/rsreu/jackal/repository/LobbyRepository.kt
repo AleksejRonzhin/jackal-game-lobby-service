@@ -12,13 +12,17 @@ class LobbyRepository {
         var lastId = 0L
     }
 
-    fun createLobby(name: String, password: String?, hostId: Long): Long {
-        lobbies.add(Lobby(id = ++lastId, password = password, host = LobbyMemberInfo(hostId)))
+    fun createLobby(title: String, password: String?, hostId: Long): Long {
+        lobbies.add(Lobby(id = ++lastId, title = title, password = password, host = LobbyMemberInfo(hostId)))
         return lastId
     }
 
     fun findByUser(userId: Long): Lobby? =
         lobbies.find { lobby ->
-            lobby.members.find { it.userId == userId } != null
+            lobby.checkUserInLobbyById(userId)
         }
+
+    fun findLobbyByTitle(title: String): Lobby? = lobbies.find { it.title == title }
+
+
 }
