@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import ru.rsreu.jackal.exception.LobbyNotFoundException
-import ru.rsreu.jackal.exception.UserAlreadyInLobbyException
-import ru.rsreu.jackal.exception.UserInBlackListException
-import ru.rsreu.jackal.exception.WrongLobbyPasswordException
+import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyResponse
 import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyStatus
 
@@ -20,6 +17,13 @@ class LobbyControllerAdvice {
     fun handleUserAlreadyInLobbyException(): ResponseEntity<PreConnectLobbyResponse> =
         ResponseEntity.ok(
             PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_ALREADY_IN_LOBBY)
+        )
+
+    @ExceptionHandler(NotUniqueLobbyTitleException::class)
+    @ResponseStatus(HttpStatus.OK)
+    fun handleNotUniqueLobbyTitleException(): ResponseEntity<PreConnectLobbyResponse> =
+        ResponseEntity.ok(
+            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.NOT_UNIQUE_LOBBY_TITLE)
         )
 
     @ExceptionHandler(LobbyNotFoundException::class)
@@ -40,8 +44,6 @@ class LobbyControllerAdvice {
     @ResponseStatus(HttpStatus.OK)
     fun handleUserInBlackListException(): ResponseEntity<PreConnectLobbyResponse> =
         ResponseEntity.ok(
-            PreConnectLobbyResponse(
-                responseStatus = PreConnectLobbyStatus.USER_IN_LOBBY_BLACK_LIST
-            )
+            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_IN_LOBBY_BLACK_LIST)
         )
 }

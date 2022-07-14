@@ -7,9 +7,10 @@ import ru.rsreu.jackal.repository.LobbyRepository
 
 @Service
 class LobbyService(private val repository: LobbyRepository) {
-    fun create(lobbyName: String, lobbyPassword: String? = null, hostId: Long): Long {
+    fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long): Long {
         checkLobbyByUserExistingOrThrow(hostId)
-        return repository.createLobby(lobbyName, lobbyPassword, hostId)
+        runCatching { getLobbyByTitleOrThrow(lobbyTitle) }.onSuccess { throw NotUniqueLobbyTitleException() }
+        return repository.createLobby(lobbyTitle, lobbyPassword, hostId)
     }
 
     private fun checkLobbyByUserExistingOrThrow(userId: Long) {
@@ -20,13 +21,16 @@ class LobbyService(private val repository: LobbyRepository) {
 
     fun preConnect(lobbyTitle: String, lobbyPassword: String? = null, userId: Long): Long {
         checkLobbyByUserExistingOrThrow(userId)
-        val lobby = repository.findLobbyByTitle(lobbyTitle) ?: throw LobbyNotFoundException()
+        val lobby = getLobbyByTitleOrThrow(lobbyTitle)
         checkPasswordsOrThrow(lobby, lobbyPassword)
         checkInGameOrThrow(lobby)
         checkUserInBlackListOrThrow(lobby, userId)
         lobby.addUser(userId)
         return lobby.id
     }
+
+    private fun getLobbyByTitleOrThrow(lobbyTitle: String) =
+        repository.findLobbyByTitle(lobbyTitle) ?: throw LobbyNotFoundException()
 
     private fun checkUserInBlackListOrThrow(lobby: Lobby, userId: Long) {
         if (lobby.checkUserInBlackListById(userId)) {

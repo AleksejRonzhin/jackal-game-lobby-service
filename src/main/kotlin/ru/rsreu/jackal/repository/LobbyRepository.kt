@@ -23,6 +23,4 @@ class LobbyRepository {
         }
 
     fun findLobbyByTitle(title: String): Lobby? = lobbies.find { it.title == title }
-
-
 }
