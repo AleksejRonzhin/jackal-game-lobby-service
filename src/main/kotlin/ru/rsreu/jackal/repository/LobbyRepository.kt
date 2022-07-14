@@ -9,7 +9,7 @@ class LobbyRepository {
     private val lobbies: MutableCollection<Lobby> = mutableListOf()
 
     companion object {
-        var lastId = 1L
+        var lastId = 0L
     }
 
     fun createLobby(name: String, password: String?, hostId: Long): Long {
