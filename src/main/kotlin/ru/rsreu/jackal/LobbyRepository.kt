@@ -2,15 +2,20 @@ package ru.rsreu.jackal
 
 import org.springframework.stereotype.Repository
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.models.WebSocketInfo
 
 @Repository
 class LobbyRepository {
     private val lobbies: MutableCollection<Lobby> = mutableListOf()
 
+    companion object {
+        var lastId = 1L
+    }
+
     fun getAll(): Collection<Lobby> = lobbies
 
-    fun createLobby(){
-        lobbies.add(Lobby(1, mutableListOf(), WebSocketInfo()))
+    fun createLobby(): Long {
+        val lobbyId = lastId++
+        lobbies.add(Lobby(lobbyId, mutableListOf()))
+        return lobbyId
     }
 }

@@ -1,2 +1,11 @@
 server:
   port: 8081
+
+web_sockets:
+  lobby_pattern: "/topic/lobby/"
+  user_pattern: "/topic/client/"
+
+security:
+  jwt:
+    secret: "vergetghetwbhtrhhwryhryhnrw54h46hnyfgnfgnytn"
+
