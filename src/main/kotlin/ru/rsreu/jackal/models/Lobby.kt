@@ -1,8 +1,6 @@
 package ru.rsreu.jackal.models
 
-import ru.rsreu.jackal.exception.AttemptToLeaveFromLobbyInGameException
-import ru.rsreu.jackal.exception.LobbyNotFoundForUserConnectionInfoException
-import ru.rsreu.jackal.exception.UserNotFoundInAnyLobbyException
+import ru.rsreu.jackal.exception.*
 
 class Lobby(
     val id: Long,
@@ -41,7 +39,7 @@ class Lobby(
     fun getAllMembers() = members.toList()
 
     fun disconnectUser(userId: Long) {
-        val member = members.find { it.userId == userId } ?: throw UserNotFoundInAnyLobbyException(userId)
+        val member = getMemberOrThrow(userId)
         if (member.status == LobbyMemberStatus.IN_GAME) {
             throw AttemptToLeaveFromLobbyInGameException(userId)
         }
@@ -51,7 +49,23 @@ class Lobby(
         }
     }
 
+    private fun getMemberOrThrow(userId: Long) =
+        members.find { it.userId == userId } ?: throw UserNotFoundInAnyLobbyException(userId)
+
     private fun setNewRandomHost() {
         host = members.randomOrNull()
+    }
+
+    fun changeMemberStateAndGetInfo(userId: Long): LobbyMemberInfo {
+        val member = getMemberOrThrow(userId)
+        if (member.status == LobbyMemberStatus.IN_GAME) {
+            throw AttemptToChangeStateInGameException(userId)
+        }
+        if (member.status == LobbyMemberStatus.NOT_CONNECTED) {
+            throw AttemptToChangeStateNotConnectedException(userId)
+        }
+        member.status =
+            if (member.status == LobbyMemberStatus.READY) LobbyMemberStatus.NOT_READY else LobbyMemberStatus.READY
+        return member
     }
 }

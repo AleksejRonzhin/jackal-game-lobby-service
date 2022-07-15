@@ -1,3 +1,3 @@
 package ru.rsreu.jackal.exception
 
-class UserNotFoundInAnyLobbyException(val userId: Long) : RuntimeException()
+class UserNotFoundInAnyLobbyException(userId: Long) : WebSocketException(userId)
