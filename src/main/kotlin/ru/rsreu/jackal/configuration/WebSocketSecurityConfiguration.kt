@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer
 
 @Configuration
-class WebSocketSecurityConfig : AbstractSecurityWebSocketMessageBrokerConfigurer() {
+class WebSocketSecurityConfiguration : AbstractSecurityWebSocketMessageBrokerConfigurer() {
     override fun configureInbound(messages: MessageSecurityMetadataSourceRegistry?) {
         messages!!
             .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT).permitAll()
