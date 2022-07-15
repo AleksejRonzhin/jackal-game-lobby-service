@@ -1,9 +1,9 @@
 package ru.rsreu.jackal.exception
 
-class LobbyNotFoundException() : RuntimeException() {
+class LobbyNotFoundException() : WebSocketException() {
     var wsSendingUserId: Long = -1L
 
-    constructor(sendingUserId: Long) : this() {
-        this.wsSendingUserId = sendingUserId
+    constructor(wsSendingUserId: Long) : this() {
+        this.wsSendingUserId = wsSendingUserId
     }
 }

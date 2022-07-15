@@ -89,4 +89,9 @@ class LobbyService(private val repository: LobbyRepository) {
         }
         return newHostId
     }
+
+    fun changeStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMemberInfo {
+        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
+        return lobby.changeMemberStateAndGetInfo(userId)
+    }
 }
