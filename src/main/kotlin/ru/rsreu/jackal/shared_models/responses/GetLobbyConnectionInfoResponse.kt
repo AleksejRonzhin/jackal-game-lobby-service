@@ -3,12 +3,12 @@ package ru.rsreu.jackal.shared_models.responses
 import ru.rsreu.jackal.shared_models.ResponseBody
 import ru.rsreu.jackal.shared_models.WebSocketInfo
 
-data class ReconnectLobbyResponse(
+data class GetLobbyConnectionInfoResponse(
     val webSocketInfo: WebSocketInfo? = null,
     val token: String? = null,
-    override val responseStatus: ReconnectLobbyStatus
-) : ResponseBody<ReconnectLobbyStatus>
+    override val responseStatus: GetLobbyConnectionInfoStatus
+) : ResponseBody<GetLobbyConnectionInfoStatus>
 
-enum class ReconnectLobbyStatus {
+enum class GetLobbyConnectionInfoStatus {
     OK, USER_NOT_IN_ANY_LOBBY
 }

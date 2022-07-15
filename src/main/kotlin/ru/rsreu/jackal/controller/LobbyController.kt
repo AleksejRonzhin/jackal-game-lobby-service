@@ -5,56 +5,53 @@ import org.springframework.web.bind.annotation.*
 import ru.rsreu.jackal.jwt.JwtTokenProvider
 import ru.rsreu.jackal.service.LobbyService
 import ru.rsreu.jackal.shared_models.requests.CreateLobbyRequest
-import ru.rsreu.jackal.shared_models.requests.PreConnectLobbyRequest
-import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyResponse
-import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyStatus
-import ru.rsreu.jackal.shared_models.responses.ReconnectLobbyResponse
-import ru.rsreu.jackal.shared_models.responses.ReconnectLobbyStatus
+import ru.rsreu.jackal.shared_models.requests.JoinLobbyRequest
+import ru.rsreu.jackal.shared_models.responses.*
 
 @RestController
 @RequestMapping("/api/lobby")
 class LobbyController(
-    private val service: LobbyService,
+    private val lobbyService: LobbyService,
     private val jwtTokenProvider: JwtTokenProvider,
     private val webSocketInfoCreator: WebSocketInfoCreator
 ) {
     @PostMapping("/create")
-    fun create(@RequestBody request: CreateLobbyRequest): ResponseEntity<PreConnectLobbyResponse> {
+    fun create(@RequestBody request: CreateLobbyRequest): ResponseEntity<CreateLobbyResponse> {
         val userId = request.hostId
-        val lobbyId = service.create(request.lobbyTitle, request.lobbyPassword, userId)
+        val lobbyId = lobbyService.create(request.lobbyTitle, request.lobbyPassword, userId)
         val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
         return ResponseEntity.ok(
-            PreConnectLobbyResponse(
+            CreateLobbyResponse(
                 webSocketInfo = webSocketInfo,
                 token = jwtTokenProvider.createAccessToken(lobbyId, userId),
-                responseStatus = PreConnectLobbyStatus.OK
+                responseStatus = CreateLobbyStatus.OK
             )
         )
     }
 
-    @PostMapping("/pre-connect")
-    fun preConnect(@RequestBody request: PreConnectLobbyRequest): ResponseEntity<PreConnectLobbyResponse> {
+    @PostMapping("/join")
+    fun join(@RequestBody request: JoinLobbyRequest): ResponseEntity<JoinLobbyResponse> {
         val userId = request.userId
-        val lobbyId = service.preConnect(request.lobbyTitle, request.lobbyPassword, userId)
+        val lobbyId = lobbyService.join(request.lobbyTitle, request.lobbyPassword, userId)
         val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
         return ResponseEntity.ok(
-            PreConnectLobbyResponse(
+            JoinLobbyResponse(
                 webSocketInfo = webSocketInfo,
                 token = jwtTokenProvider.createAccessToken(lobbyId, userId),
-                responseStatus = PreConnectLobbyStatus.OK
+                responseStatus = JoinLobbyStatus.OK
             )
         )
     }
 
-    @GetMapping("/reconnect/userId={userId}")
-    fun reconnect(@PathVariable userId: Long): ResponseEntity<ReconnectLobbyResponse> {
-        val lobbyId = service.reconnect(userId).id
+    @GetMapping("/connection-info/userId={userId}")
+    fun getInfoAboutConnection(@PathVariable userId: Long): ResponseEntity<GetLobbyConnectionInfoResponse> {
+        val lobbyId = lobbyService.getByUserId(userId).id
         val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
         return ResponseEntity.ok(
-            ReconnectLobbyResponse(
+            GetLobbyConnectionInfoResponse(
                 webSocketInfo = webSocketInfo,
                 token = jwtTokenProvider.createAccessToken(lobbyId, userId),
-                responseStatus = ReconnectLobbyStatus.OK
+                responseStatus = GetLobbyConnectionInfoStatus.OK
             )
         )
     }
