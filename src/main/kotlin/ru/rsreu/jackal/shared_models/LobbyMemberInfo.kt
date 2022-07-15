@@ -1,4 +1,4 @@
-package ru.rsreu.jackal.models
+package ru.rsreu.jackal.shared_models
 
 data class LobbyMemberInfo(
     val userId: Long,
