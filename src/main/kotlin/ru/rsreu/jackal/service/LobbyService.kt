@@ -14,13 +14,6 @@ class LobbyService(private val repository: LobbyRepository) {
         return repository.createLobby(lobbyTitle, lobbyPassword, hostId)
     }
 
-
-    private fun checkLobbyByUserExistingOrThrow(userId: Long) {
-        if (repository.findLobbyByUser(userId) != null) {
-            throw UserAlreadyInLobbyException()
-        }
-    }
-
     private fun checkHostIsNotInAnyLobbyOrThrow(hostId: Long) {
         if (isUserInAnyLobby(hostId)) {
             throw HostAlreadyInLobbyException()
@@ -28,7 +21,7 @@ class LobbyService(private val repository: LobbyRepository) {
         }
     }
 
-    private fun isUserInAnyLobby(userId: Long): Boolean = repository.findByUser(userId) != null
+    private fun isUserInAnyLobby(userId: Long): Boolean = repository.findLobbyById(userId) != null
 
     fun join(lobbyTitle: String, lobbyPassword: String? = null, userId: Long): Long {
         checkLobbyByUserExistingOrThrow(userId)
@@ -77,7 +70,7 @@ class LobbyService(private val repository: LobbyRepository) {
         repository.findLobbyById(lobbyId)?.getAllMembersIds()
 
 
-    fun getByUserIdOrThrow(userId: Long): Lobby = repository.findByUser(userId) ?: throw UserNotInAnyLobbyException()
+    fun getByUserIdOrThrow(userId: Long): Lobby = repository.findLobbyById(userId) ?: throw UserNotInAnyLobbyException()
 
     fun changeGame(gameId: Long, userId: Long) {
         val lobby = getByUserIdOrThrow(userId)
@@ -85,8 +78,8 @@ class LobbyService(private val repository: LobbyRepository) {
         lobby.gameId = gameId
     }
 
-    fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long){
-        if(lobby.host.userId != userId){
+    fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
+        if (lobby.host.userId != userId) {
             throw UserIsNotHostException()
         }
     }
