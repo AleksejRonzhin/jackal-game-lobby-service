@@ -25,4 +25,6 @@ class LobbyRepository {
     fun findLobbyByTitle(title: String): Lobby? = lobbies.find { it.title == title }
 
     fun findLobbyById(id: Long): Lobby? = lobbies.find { it.id == id }
+
+    fun removeLobbyById(id: Long) = lobbies.removeIf { it.id == id }
 }

@@ -1,6 +1,6 @@
 package ru.rsreu.jackal.websocket.dto
 
-class ConnectionErrorResponse(
+data class ConnectionErrorResponse(
     val type: WebSocketResponseType = WebSocketResponseType.CONNECTION_ERROR,
     val connectedErrorType: ConnectedErrorType
 )

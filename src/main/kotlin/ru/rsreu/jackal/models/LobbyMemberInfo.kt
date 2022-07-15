@@ -6,5 +6,5 @@ data class LobbyMemberInfo(
 )
 
 enum class LobbyMemberStatus{
-    NOT_CONNECTED, READY, NOT_READY
+    NOT_CONNECTED, READY, NOT_READY, IN_GAME
 }

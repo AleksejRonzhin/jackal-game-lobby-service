@@ -17,11 +17,10 @@ class LobbyService(private val repository: LobbyRepository) {
     private fun checkHostIsNotInAnyLobbyOrThrow(hostId: Long) {
         if (isUserInAnyLobby(hostId)) {
             throw HostAlreadyInLobbyException()
-
         }
     }
 
-    private fun isUserInAnyLobby(userId: Long): Boolean = repository.findLobbyById(userId) != null
+    private fun isUserInAnyLobby(userId: Long): Boolean = repository.findLobbyByUser(userId) != null
 
     fun join(lobbyTitle: String, lobbyPassword: String? = null, userId: Long): Long {
         checkLobbyByUserExistingOrThrow(userId)
@@ -60,17 +59,11 @@ class LobbyService(private val repository: LobbyRepository) {
         }
     }
 
-
-    fun connectUser(userId: Long) {
-        val lobby = repository.findLobbyByUser(userId) ?: throw LobbyNotFoundException(userId)
+    fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: Long): Pair<Long, List<LobbyMemberInfo>> {
+        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
         lobby.connectUser(userId)
+        return Pair(lobby.host!!.userId, lobby.getAllMembers())
     }
-
-    fun getAllLobbyMembers(lobbyId: Long): List<LobbyMemberInfo>? =
-        repository.findLobbyById(lobbyId)?.getAllMembersIds()
-
-
-    fun getByUserIdOrThrow(userId: Long): Lobby = repository.findLobbyById(userId) ?: throw UserNotInAnyLobbyException()
 
     fun changeGame(gameId: Long, userId: Long) {
         val lobby = getByUserIdOrThrow(userId)
@@ -78,9 +71,22 @@ class LobbyService(private val repository: LobbyRepository) {
         lobby.gameId = gameId
     }
 
-    fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
-        if (lobby.host.userId != userId) {
+    fun getByUserIdOrThrow(userId: Long, exception: Throwable = UserNotInAnyLobbyException()): Lobby =
+        repository.findLobbyById(userId) ?: throw exception
+
+    private fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
+        if (lobby.host!!.userId != userId) {
             throw UserIsNotHostException()
         }
+    }
+
+    fun disconnectUserAndGetHostId(userId: Long, lobbyId: Long): Long? {
+        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
+        lobby.disconnectUser(userId)
+        val newHostId = lobby.host?.userId
+        if (newHostId == null) {
+            repository.removeLobbyById(lobbyId)
+        }
+        return newHostId
     }
 }
