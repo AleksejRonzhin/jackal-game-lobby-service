@@ -8,42 +8,45 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyResponse
 import ru.rsreu.jackal.shared_models.responses.PreConnectLobbyStatus
+import ru.rsreu.jackal.shared_models.responses.ReconnectLobbyResponse
+import ru.rsreu.jackal.shared_models.responses.ReconnectLobbyStatus
 
 @RestControllerAdvice
 class LobbyControllerAdvice {
 
     @ExceptionHandler(UserAlreadyInLobbyException::class)
     @ResponseStatus(HttpStatus.OK)
-    fun handleUserAlreadyInLobbyException(): ResponseEntity<PreConnectLobbyResponse> =
-        ResponseEntity.ok(
-            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_ALREADY_IN_LOBBY)
-        )
+    fun handleUserAlreadyInLobbyException(): ResponseEntity<PreConnectLobbyResponse> = ResponseEntity.ok(
+        PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_ALREADY_IN_LOBBY)
+    )
 
     @ExceptionHandler(NotUniqueLobbyTitleException::class)
     @ResponseStatus(HttpStatus.OK)
-    fun handleNotUniqueLobbyTitleException(): ResponseEntity<PreConnectLobbyResponse> =
-        ResponseEntity.ok(
-            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.NOT_UNIQUE_LOBBY_TITLE)
-        )
+    fun handleNotUniqueLobbyTitleException(): ResponseEntity<PreConnectLobbyResponse> = ResponseEntity.ok(
+        PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.NOT_UNIQUE_LOBBY_TITLE)
+    )
 
     @ExceptionHandler(LobbyNotFoundException::class)
     @ResponseStatus(HttpStatus.OK)
-    fun handleLobbyNotFoundException(): ResponseEntity<PreConnectLobbyResponse> =
-        ResponseEntity.ok(
-            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.LOBBY_NOT_FOUND)
-        )
+    fun handleLobbyNotFoundException(): ResponseEntity<PreConnectLobbyResponse> = ResponseEntity.ok(
+        PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.LOBBY_NOT_FOUND)
+    )
 
     @ExceptionHandler(WrongLobbyPasswordException::class)
     @ResponseStatus(HttpStatus.OK)
-    fun handleWrongLobbyPasswordException(): ResponseEntity<PreConnectLobbyResponse> =
-        ResponseEntity.ok(
-            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.WRONG_PASSWORD)
-        )
+    fun handleWrongLobbyPasswordException(): ResponseEntity<PreConnectLobbyResponse> = ResponseEntity.ok(
+        PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.WRONG_PASSWORD)
+    )
 
     @ExceptionHandler(UserInBlackListException::class)
     @ResponseStatus(HttpStatus.OK)
-    fun handleUserInBlackListException(): ResponseEntity<PreConnectLobbyResponse> =
-        ResponseEntity.ok(
-            PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_IN_LOBBY_BLACK_LIST)
-        )
+    fun handleUserInBlackListException(): ResponseEntity<PreConnectLobbyResponse> = ResponseEntity.ok(
+        PreConnectLobbyResponse(responseStatus = PreConnectLobbyStatus.USER_IN_LOBBY_BLACK_LIST)
+    )
+
+    @ExceptionHandler(UserNotInAnyLobbyException::class)
+    @ResponseStatus(HttpStatus.OK)
+    fun handleUserNotInAnyLobbyException(): ResponseEntity<ReconnectLobbyResponse> = ResponseEntity.ok(
+        ReconnectLobbyResponse(responseStatus = ReconnectLobbyStatus.USER_NOT_IN_ANY_LOBBY)
+    )
 }

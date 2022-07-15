@@ -29,6 +29,8 @@ class LobbyService(private val repository: LobbyRepository) {
         return lobby.id
     }
 
+    fun reconnect(userId: Long): Lobby = repository.findByUser(userId) ?: throw UserNotInAnyLobbyException()
+
     private fun getLobbyByTitleOrThrow(lobbyTitle: String) =
         repository.findLobbyByTitle(lobbyTitle) ?: throw LobbyNotFoundException()
 
