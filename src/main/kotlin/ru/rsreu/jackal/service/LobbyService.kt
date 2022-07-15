@@ -58,5 +58,17 @@ class LobbyService(private val repository: LobbyRepository) {
         }
     }
 
-    fun getByUserId(userId: Long): Lobby = repository.findByUser(userId) ?: throw UserNotInAnyLobbyException()
+    fun getByUserIdOrThrow(userId: Long): Lobby = repository.findByUser(userId) ?: throw UserNotInAnyLobbyException()
+
+    fun changeGame(gameId: Long, userId: Long) {
+        val lobby = getByUserIdOrThrow(userId)
+        checkUserIsHostOrThrow(lobby, userId)
+        lobby.gameId = gameId
+    }
+
+    fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long){
+        if(lobby.host.userId != userId){
+            throw UserIsNotHostException()
+        }
+    }
 }

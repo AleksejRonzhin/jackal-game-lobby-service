@@ -9,7 +9,7 @@ import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.responses.*
 
 @RestControllerAdvice
-class LobbyControllerAdvice {
+class LobbyControllerAdvice { // TODO 1 экзепшен здесь может прокинуть только один класс ответа, возможно стоит класть в экзепшн объект ответа
     @ExceptionHandler(HostAlreadyInLobbyException::class)
     @ResponseStatus(HttpStatus.OK)
     fun handleHostAlreadyInLobbyException(): ResponseEntity<CreateLobbyResponse> = ResponseEntity.ok(

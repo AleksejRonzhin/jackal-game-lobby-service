@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.rsreu.jackal.jwt.JwtTokenProvider
 import ru.rsreu.jackal.service.LobbyService
+import ru.rsreu.jackal.shared_models.requests.ChangeGameRequest
 import ru.rsreu.jackal.shared_models.requests.CreateLobbyRequest
 import ru.rsreu.jackal.shared_models.requests.JoinLobbyRequest
 import ru.rsreu.jackal.shared_models.responses.*
@@ -45,7 +46,7 @@ class LobbyController(
 
     @GetMapping("/connection-info/userId={userId}")
     fun getInfoAboutConnection(@PathVariable userId: Long): ResponseEntity<GetLobbyConnectionInfoResponse> {
-        val lobbyId = lobbyService.getByUserId(userId).id
+        val lobbyId = lobbyService.getByUserIdOrThrow(userId).id
         val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
         return ResponseEntity.ok(
             GetLobbyConnectionInfoResponse(
@@ -53,6 +54,14 @@ class LobbyController(
                 token = jwtTokenProvider.createAccessToken(lobbyId, userId),
                 responseStatus = GetLobbyConnectionInfoStatus.OK
             )
+        )
+    }
+
+    @PostMapping("/change-game")
+    fun changeGame(@RequestBody request: ChangeGameRequest): ResponseEntity<ChangeGameResponse> {
+        lobbyService.changeGame(request.gameId, request.userId)
+        return ResponseEntity.ok(
+            ChangeGameResponse(responseStatus = ChangeGameStatus.OK)
         )
     }
 }
