@@ -17,10 +17,12 @@ class LobbyRepository {
         return lastId
     }
 
-    fun findByUser(userId: Long): Lobby? =
+    fun findLobbyByUser(userId: Long): Lobby? =
         lobbies.find { lobby ->
             lobby.checkUserInLobbyById(userId)
         }
 
     fun findLobbyByTitle(title: String): Lobby? = lobbies.find { it.title == title }
+
+    fun findLobbyById(id: Long): Lobby? = lobbies.find { it.id == id }
 }

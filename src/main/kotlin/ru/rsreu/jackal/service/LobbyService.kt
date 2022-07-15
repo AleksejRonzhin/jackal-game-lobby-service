@@ -3,6 +3,7 @@ package ru.rsreu.jackal.service
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.models.Lobby
+import ru.rsreu.jackal.models.LobbyMemberInfo
 import ru.rsreu.jackal.repository.LobbyRepository
 
 @Service
@@ -14,7 +15,7 @@ class LobbyService(private val repository: LobbyRepository) {
     }
 
     private fun checkLobbyByUserExistingOrThrow(userId: Long) {
-        if (repository.findByUser(userId) != null) {
+        if (repository.findLobbyByUser(userId) != null) {
             throw UserAlreadyInLobbyException()
         }
     }
@@ -49,4 +50,13 @@ class LobbyService(private val repository: LobbyRepository) {
             throw WrongLobbyPasswordException()
         }
     }
+
+    fun connectUser(userId: Long) {
+        val lobby = repository.findLobbyByUser(userId) ?: throw LobbyNotFoundException(userId)
+        lobby.connectUser(userId)
+    }
+
+    fun getAllLobbyMembers(lobbyId: Long): List<LobbyMemberInfo>? =
+        repository.findLobbyById(lobbyId)?.getAllMembersIds()
+
 }
