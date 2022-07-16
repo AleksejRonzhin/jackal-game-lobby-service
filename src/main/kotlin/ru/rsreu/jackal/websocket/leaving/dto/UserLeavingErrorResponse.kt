@@ -2,11 +2,11 @@ package ru.rsreu.jackal.websocket.leaving.dto
 
 import ru.rsreu.jackal.websocket.WebSocketResponseType
 
-data class LeavingErrorResponse(
+data class UserLeavingErrorResponse(
     val type: WebSocketResponseType = WebSocketResponseType.LEAVING_ERROR,
-    val leavingErrorType: LeavingErrorType
+    val userLeavingErrorType: UserLeavingErrorType
 )
 
-enum class LeavingErrorType {
+enum class UserLeavingErrorType {
     ALREADY_NOT_IN_LOBBY, USER_IN_GAME, INVALID_TOKEN, LOBBY_NOT_EXISTS
 }

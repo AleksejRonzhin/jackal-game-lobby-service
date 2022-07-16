@@ -1,4 +1,3 @@
 package ru.rsreu.jackal.exception
 
-class HostSelfKickAttemptException {
-}
+class HostSelfKickAttemptException(userId: Long) : WebSocketException(userId)
