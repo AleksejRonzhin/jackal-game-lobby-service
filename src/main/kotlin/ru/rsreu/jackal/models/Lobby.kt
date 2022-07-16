@@ -9,7 +9,7 @@ class Lobby(
     val title: String,
     var password: String? = null,
     host: LobbyMemberInfo,
-    var gameId: Long? = null,
+    var gameModeId: Long? = null,
     var isInGame: Boolean = false,
 ) {
     private val members: MutableCollection<LobbyMemberInfo> = mutableListOf()

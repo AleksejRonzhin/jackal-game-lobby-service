@@ -59,7 +59,7 @@ class LobbyController(
 
     @PostMapping("/change-game")
     fun changeGame(@RequestBody request: ChangeGameRequest): ResponseEntity<ChangeGameResponse> {
-        lobbyService.changeGame(request.gameId, request.userId)
+        lobbyService.changeGame(request.gameModeId, request.userId)
         return ResponseEntity.ok(
             ChangeGameResponse(responseStatus = ChangeGameStatus.OK)
         )

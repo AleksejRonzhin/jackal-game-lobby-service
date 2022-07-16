@@ -66,10 +66,10 @@ class LobbyService(private val repository: LobbyRepository) {
         return Pair(lobby.host!!.userId, lobby.getAllMembers())
     }
 
-    fun changeGame(gameId: Long, userId: Long) {
+    fun changeGame(gameModeId: Long, userId: Long) {
         val lobby = getLobbyByUserIdOrThrow(userId)
         checkUserIsHostOrThrow(lobby, userId)
-        lobby.gameId = gameId
+        lobby.gameModeId = gameModeId
     }
 
     fun getLobbyByUserIdOrThrow(userId: Long, exception: Throwable = UserNotInAnyLobbyException()): Lobby =
@@ -112,7 +112,7 @@ class LobbyService(private val repository: LobbyRepository) {
             lobby.password == null,
             lobby.getAllMembers().map { transferLobbyMemberInfo(it) },
             lobby.host!!.userId,
-            lobby.gameId
+            lobby.gameModeId
         )
     }
 
