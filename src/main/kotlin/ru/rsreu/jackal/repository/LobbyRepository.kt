@@ -2,7 +2,7 @@ package ru.rsreu.jackal.repository
 
 import org.springframework.stereotype.Repository
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.models.LobbyMemberInfo
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 
 @Repository
 class LobbyRepository {

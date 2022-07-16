@@ -1,6 +1,8 @@
 package ru.rsreu.jackal.models
 
 import ru.rsreu.jackal.exception.*
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
+import ru.rsreu.jackal.shared_models.LobbyMemberStatus
 
 class Lobby(
     val id: Long,

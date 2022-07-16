@@ -3,8 +3,8 @@ package ru.rsreu.jackal.service
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.models.LobbyMemberInfo
 import ru.rsreu.jackal.repository.LobbyRepository
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 
 @Service
 class LobbyService(private val repository: LobbyRepository) {

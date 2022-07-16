@@ -1,6 +1,6 @@
 package ru.rsreu.jackal.websocket.connection.dto
 
-import ru.rsreu.jackal.models.LobbyMemberInfo
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 import ru.rsreu.jackal.websocket.WebSocketResponseType
 
 data class UserConnectedInfoForOneResponse(
