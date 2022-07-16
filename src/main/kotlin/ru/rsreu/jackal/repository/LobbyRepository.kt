@@ -2,7 +2,7 @@ package ru.rsreu.jackal.repository
 
 import org.springframework.stereotype.Repository
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.shared_models.LobbyMemberInfo
+import ru.rsreu.jackal.models.LobbyMember
 
 @Repository
 class LobbyRepository {
@@ -13,7 +13,7 @@ class LobbyRepository {
     }
 
     fun createLobby(title: String, password: String?, hostId: Long): Long {
-        lobbies.add(Lobby(id = ++lastId, title = title, password = password, host = LobbyMemberInfo(hostId)))
+        lobbies.add(Lobby(id = ++lastId, title = title, password = password, host = LobbyMember(hostId)))
         return lastId
     }
 
@@ -27,4 +27,6 @@ class LobbyRepository {
     fun findLobbyById(id: Long): Lobby? = lobbies.find { it.id == id }
 
     fun removeLobbyById(id: Long) = lobbies.removeIf { it.id == id }
+
+    fun getAllLobbies(): Collection<Lobby> = lobbies
 }
