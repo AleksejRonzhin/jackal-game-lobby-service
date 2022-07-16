@@ -2,7 +2,7 @@ package ru.rsreu.jackal.repository
 
 import org.springframework.stereotype.Repository
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.models.LobbyMember
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 
 @Repository
 class LobbyRepository {
@@ -13,7 +13,7 @@ class LobbyRepository {
     }
 
     fun createLobby(title: String, password: String?, hostId: Long): Long {
-        lobbies.add(Lobby(id = ++lastId, title = title, password = password, host = LobbyMember(hostId)))
+        lobbies.add(Lobby(id = ++lastId, title = title, password = password, host = LobbyMemberInfo(hostId)))
         return lastId
     }
 

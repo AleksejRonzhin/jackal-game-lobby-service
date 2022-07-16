@@ -1,21 +1,22 @@
 package ru.rsreu.jackal.models
 
 import ru.rsreu.jackal.exception.*
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberStatus
 
 class Lobby(
     val id: Long,
     val title: String,
     var password: String? = null,
-    host: LobbyMember,
+    host: LobbyMemberInfo,
     var gameId: Long? = null,
     var isInGame: Boolean = false,
 ) {
-    private val members: MutableCollection<LobbyMember> = mutableListOf()
+    private val members: MutableCollection<LobbyMemberInfo> = mutableListOf()
 
     private val blackList: MutableList<Long> = mutableListOf()
 
-    var host: LobbyMember? = host
+    var host: LobbyMemberInfo? = host
         private set
 
     init {
@@ -26,7 +27,7 @@ class Lobby(
 
     fun checkUserInLobbyById(userId: Long) = members.find { it.userId == userId } != null
 
-    fun addUser(userId: Long) = members.add(LobbyMember(userId))
+    fun addUser(userId: Long) = members.add(LobbyMemberInfo(userId))
 
     fun connectUser(userId: Long) {
         val member = members.find { it.userId == userId } ?: throw LobbyNotFoundForUserConnectionInfoException(userId)
@@ -54,7 +55,7 @@ class Lobby(
         host = members.randomOrNull()
     }
 
-    fun changeMemberStateAndGetInfo(userId: Long): LobbyMember {
+    fun changeMemberStateAndGetInfo(userId: Long): LobbyMemberInfo {
         val member = getMemberOrThrow(userId, UserNotFoundInAnyLobbyException(userId))
         if (member.status == LobbyMemberStatus.IN_GAME) {
             throw AttemptToChangeStateInGameException(userId)
@@ -80,9 +81,5 @@ class Lobby(
         }
         blackList.add(kickableUserId)
         members.remove(memberToKick)
-    }
-
-    fun isHost(member: LobbyMember): Boolean {
-        return member.userId == (host?.userId ?: false)
     }
 }

@@ -66,7 +66,7 @@ class LobbyController(
     }
 
     @GetMapping("/all")
-    fun getAll(): ResponseEntity<GetAllLobbiesResponse>{
+    fun getAll(): ResponseEntity<GetAllLobbiesResponse> {
         val lobbies = lobbyService.getAllLobbiesInfo()
         return ResponseEntity.ok(GetAllLobbiesResponse(lobbies, responseStatus = GetAllLobbiesStatus.OK))
     }

@@ -3,10 +3,9 @@ package ru.rsreu.jackal.service
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.models.Lobby
-import ru.rsreu.jackal.models.LobbyMember
+import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 import ru.rsreu.jackal.repository.LobbyRepository
 import ru.rsreu.jackal.shared_models.LobbyInfo
-import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 
 @Service
 class LobbyService(private val repository: LobbyRepository) {
@@ -61,7 +60,7 @@ class LobbyService(private val repository: LobbyRepository) {
         }
     }
 
-    fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: Long): Pair<Long, List<LobbyMember>> {
+    fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: Long): Pair<Long, List<LobbyMemberInfo>> {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         lobby.connectUser(userId)
         return Pair(lobby.host!!.userId, lobby.getAllMembers())
@@ -95,7 +94,7 @@ class LobbyService(private val repository: LobbyRepository) {
     private fun getLobbyByIdOrThrow(lobbyId: Long, exception: Throwable) =
         repository.findLobbyById(lobbyId) ?: throw exception
 
-    fun changeUserStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMember {
+    fun changeUserStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMemberInfo {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         return lobby.changeMemberStateAndGetInfo(userId)
     }
@@ -111,12 +110,13 @@ class LobbyService(private val repository: LobbyRepository) {
         return LobbyInfo(
             lobby.title,
             lobby.password == null,
-            lobby.getAllMembers().map { transferLobbyMemberInfo(it, lobby.isHost(it)) },
+            lobby.getAllMembers().map { transferLobbyMemberInfo(it) },
+            lobby.host!!.userId,
             lobby.gameId
         )
     }
 
-    private fun transferLobbyMemberInfo(lobbyMember: LobbyMember, isHost: Boolean): LobbyMemberInfo {
-        return LobbyMemberInfo(lobbyMember.userId, lobbyMember.status, isHost)
+    private fun transferLobbyMemberInfo(lobbyMember: LobbyMemberInfo): LobbyMemberInfo {
+        return LobbyMemberInfo(lobbyMember.userId, lobbyMember.status)
     }
 }
