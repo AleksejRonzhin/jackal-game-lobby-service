@@ -1,4 +1,3 @@
 package ru.rsreu.jackal.exception
 
-class UserInGameAttemptKickException {
-}
+class UserInGameAttemptKickException(userId: Long) : WebSocketException(userId)

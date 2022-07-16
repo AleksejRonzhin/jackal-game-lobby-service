@@ -4,17 +4,17 @@ import org.springframework.messaging.handler.annotation.MessageExceptionHandler
 import org.springframework.web.bind.annotation.ControllerAdvice
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.websocket.WebSocketUtil
-import ru.rsreu.jackal.websocket.status_changing.dto.LobbyMemberChangingStatusErrorResponse
-import ru.rsreu.jackal.websocket.status_changing.dto.LobbyMemberChangingStatusErrorType
+import ru.rsreu.jackal.websocket.status_changing.dto.UserChangingStatusErrorResponse
+import ru.rsreu.jackal.websocket.status_changing.dto.UserChangingStatusErrorType
 
-@ControllerAdvice(basePackageClasses = [LobbyMemberStatusChangingController::class])
-class LobbyMemberChangingStatusControllerAdvice(private val wsUtil: WebSocketUtil) {
+@ControllerAdvice(basePackageClasses = [UserChangingStatusChangingController::class])
+class UserChangingStatusControllerAdvice(private val wsUtil: WebSocketUtil) {
     @MessageExceptionHandler(InvalidForLobbyTokenException::class)
     fun handleInvalidForLobbyTokenException(exception: InvalidForLobbyTokenException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LobbyMemberChangingStatusErrorResponse(
-                lobbyMemberChangingStatusErrorType = LobbyMemberChangingStatusErrorType.INVALID_TOKEN
+            UserChangingStatusErrorResponse(
+                userChangingStatusErrorType = UserChangingStatusErrorType.INVALID_TOKEN
             )
         )
     }
@@ -22,9 +22,9 @@ class LobbyMemberChangingStatusControllerAdvice(private val wsUtil: WebSocketUti
     @MessageExceptionHandler(LobbyNotFoundException::class)
     fun handleLobbyNotFoundException(exception: LobbyNotFoundException) {
         wsUtil.sendInfoForOne(
-            exception.wsSendingUserId,
-            LobbyMemberChangingStatusErrorResponse(
-                lobbyMemberChangingStatusErrorType = LobbyMemberChangingStatusErrorType.LOBBY_NOT_EXISTS
+            exception.userId,
+            UserChangingStatusErrorResponse(
+                userChangingStatusErrorType = UserChangingStatusErrorType.LOBBY_NOT_EXISTS
             )
         )
     }
@@ -33,8 +33,8 @@ class LobbyMemberChangingStatusControllerAdvice(private val wsUtil: WebSocketUti
     fun handleUserNotFoundInAnyLobbyException(exception: WebSocketException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LobbyMemberChangingStatusErrorResponse(
-                lobbyMemberChangingStatusErrorType = LobbyMemberChangingStatusErrorType.USER_NOT_CONNECTED
+            UserChangingStatusErrorResponse(
+                userChangingStatusErrorType = UserChangingStatusErrorType.USER_NOT_CONNECTED
             )
         )
     }
@@ -43,8 +43,8 @@ class LobbyMemberChangingStatusControllerAdvice(private val wsUtil: WebSocketUti
     fun handleAttemptToChangeStateInGameException(exception: AttemptToChangeStateInGameException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LobbyMemberChangingStatusErrorResponse(
-                lobbyMemberChangingStatusErrorType = LobbyMemberChangingStatusErrorType.USER_IN_GAME
+            UserChangingStatusErrorResponse(
+                userChangingStatusErrorType = UserChangingStatusErrorType.USER_IN_GAME
             )
         )
     }

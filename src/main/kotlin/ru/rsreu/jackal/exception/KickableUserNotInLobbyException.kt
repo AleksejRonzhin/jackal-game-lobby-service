@@ -1,3 +1,3 @@
 package ru.rsreu.jackal.exception
 
-class KickableUserNotInLobby(userId: Long) : WebSocketException(userId)
+class KickableUserNotInLobbyException(userId: Long) : WebSocketException(userId)

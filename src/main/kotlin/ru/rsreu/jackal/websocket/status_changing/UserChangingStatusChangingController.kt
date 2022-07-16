@@ -7,10 +7,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.service.LobbyService
 import ru.rsreu.jackal.websocket.WebSocketUtil
-import ru.rsreu.jackal.websocket.status_changing.dto.LobbyMemberChangedStatusInfoForAllResponse
+import ru.rsreu.jackal.websocket.status_changing.dto.UserChangedStatusInfoForAllResponse
 
 @Controller
-class LobbyMemberStatusChangingController(
+class UserChangingStatusChangingController(
     private val wsUtil: WebSocketUtil,
     private val lobbyService: LobbyService
 ) {
@@ -19,10 +19,10 @@ class LobbyMemberStatusChangingController(
     fun changeLobbyMemberStatus(
         @DestinationVariable lobbyId: Long,
         authentication: Authentication
-    ): LobbyMemberChangedStatusInfoForAllResponse {
+    ): UserChangedStatusInfoForAllResponse {
         val userId = authentication.principal.toString().toLong()
         wsUtil.validateTokenForLobbyId(lobbyId, authentication.credentials.toString().toLong(), userId)
-        val member = lobbyService.changeStateAndGetInfo(userId, lobbyId)
-        return LobbyMemberChangedStatusInfoForAllResponse(lobbyMemberInfo = member)
+        val member = lobbyService.changeUserStateAndGetInfo(userId, lobbyId)
+        return UserChangedStatusInfoForAllResponse(lobbyMemberInfo = member)
     }
 }

@@ -46,7 +46,7 @@ class LobbyController(
 
     @GetMapping("/connection-info/userId={userId}")
     fun getInfoAboutConnection(@PathVariable userId: Long): ResponseEntity<GetLobbyConnectionInfoResponse> {
-        val lobbyId = lobbyService.getByUserIdOrThrow(userId).id
+        val lobbyId = lobbyService.getLobbyByUserIdOrThrow(userId).id
         val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
         return ResponseEntity.ok(
             GetLobbyConnectionInfoResponse(

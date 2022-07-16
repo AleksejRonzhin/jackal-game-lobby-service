@@ -21,8 +21,6 @@ class Lobby(
         members.add(host)
     }
 
-    fun addToBlackList(id: Long) = blackList.add(id)
-
     fun checkUserInBlackListById(id: Long) = blackList.contains(id)
 
     fun checkUserInLobbyById(userId: Long) = members.find { it.userId == userId } != null
@@ -39,7 +37,7 @@ class Lobby(
     fun getAllMembers() = members.toList()
 
     fun disconnectUser(userId: Long) {
-        val member = getMemberOrThrow(userId)
+        val member = getMemberOrThrow(userId, UserNotFoundInAnyLobbyException(userId))
         if (member.status == LobbyMemberStatus.IN_GAME) {
             throw AttemptToLeaveFromLobbyInGameException(userId)
         }
@@ -49,15 +47,15 @@ class Lobby(
         }
     }
 
-    private fun getMemberOrThrow(userId: Long) =
-        members.find { it.userId == userId } ?: throw UserNotFoundInAnyLobbyException(userId)
+    private fun getMemberOrThrow(userId: Long, exception: Throwable) =
+        members.find { it.userId == userId } ?: throw exception
 
     private fun setNewRandomHost() {
         host = members.randomOrNull()
     }
 
     fun changeMemberStateAndGetInfo(userId: Long): LobbyMemberInfo {
-        val member = getMemberOrThrow(userId)
+        val member = getMemberOrThrow(userId, UserNotFoundInAnyLobbyException(userId))
         if (member.status == LobbyMemberStatus.IN_GAME) {
             throw AttemptToChangeStateInGameException(userId)
         }
@@ -67,5 +65,20 @@ class Lobby(
         member.status =
             if (member.status == LobbyMemberStatus.READY) LobbyMemberStatus.NOT_READY else LobbyMemberStatus.READY
         return member
+    }
+
+    fun kickUser(hostId: Long, kickableUserId: Long) {
+        if (host!!.userId != hostId) {
+            throw NotHostKickAttemptException(hostId)
+        }
+        if (host!!.userId == kickableUserId) {
+            throw HostSelfKickAttemptException(hostId)
+        }
+        val memberToKick = getMemberOrThrow(kickableUserId, KickableUserNotInLobbyException(hostId))
+        if (memberToKick.status == LobbyMemberStatus.IN_GAME) {
+            throw UserInGameAttemptKickException(hostId)
+        }
+        blackList.add(kickableUserId)
+        members.remove(memberToKick)
     }
 }

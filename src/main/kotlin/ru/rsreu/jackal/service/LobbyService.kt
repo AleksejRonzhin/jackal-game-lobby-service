@@ -60,19 +60,19 @@ class LobbyService(private val repository: LobbyRepository) {
     }
 
     fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: Long): Pair<Long, List<LobbyMemberInfo>> {
-        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
+        val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         lobby.connectUser(userId)
         return Pair(lobby.host!!.userId, lobby.getAllMembers())
     }
 
     fun changeGame(gameId: Long, userId: Long) {
-        val lobby = getByUserIdOrThrow(userId)
+        val lobby = getLobbyByUserIdOrThrow(userId)
         checkUserIsHostOrThrow(lobby, userId)
         lobby.gameId = gameId
     }
 
-    fun getByUserIdOrThrow(userId: Long, exception: Throwable = UserNotInAnyLobbyException()): Lobby =
-        repository.findLobbyById(userId) ?: throw exception
+    fun getLobbyByUserIdOrThrow(userId: Long, exception: Throwable = UserNotInAnyLobbyException()): Lobby =
+        repository.findLobbyByUser(userId) ?: throw exception
 
     private fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
         if (lobby.host!!.userId != userId) {
@@ -81,7 +81,7 @@ class LobbyService(private val repository: LobbyRepository) {
     }
 
     fun disconnectUserAndGetHostId(userId: Long, lobbyId: Long): Long? {
-        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
+        val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         lobby.disconnectUser(userId)
         val newHostId = lobby.host?.userId
         if (newHostId == null) {
@@ -90,8 +90,16 @@ class LobbyService(private val repository: LobbyRepository) {
         return newHostId
     }
 
-    fun changeStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMemberInfo {
-        val lobby = repository.findLobbyById(lobbyId) ?: throw LobbyNotFoundException(userId)
+    private fun getLobbyByIdOrThrow(lobbyId: Long, exception: Throwable) =
+        repository.findLobbyById(lobbyId) ?: throw exception
+
+    fun changeUserStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMemberInfo {
+        val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         return lobby.changeMemberStateAndGetInfo(userId)
+    }
+
+    fun kickUserFromLobby(hostId: Long, lobbyId: Long, kickableUserId: Long) {
+        val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(hostId))
+        lobby.kickUser(hostId, kickableUserId)
     }
 }

@@ -7,8 +7,8 @@ import ru.rsreu.jackal.exception.InvalidForLobbyTokenException
 import ru.rsreu.jackal.exception.LobbyNotFoundException
 import ru.rsreu.jackal.exception.UserNotFoundInAnyLobbyException
 import ru.rsreu.jackal.websocket.WebSocketUtil
-import ru.rsreu.jackal.websocket.leaving.dto.LeavingErrorResponse
-import ru.rsreu.jackal.websocket.leaving.dto.LeavingErrorType
+import ru.rsreu.jackal.websocket.leaving.dto.UserLeavingErrorResponse
+import ru.rsreu.jackal.websocket.leaving.dto.UserLeavingErrorType
 
 @ControllerAdvice(basePackageClasses = [LobbyLeavingController::class])
 class LobbyLeavingControllerAdvice(private val wsUtil: WebSocketUtil) {
@@ -16,15 +16,15 @@ class LobbyLeavingControllerAdvice(private val wsUtil: WebSocketUtil) {
     fun handleInvalidForLobbyTokenException(exception: InvalidForLobbyTokenException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LeavingErrorResponse(leavingErrorType = LeavingErrorType.INVALID_TOKEN)
+            UserLeavingErrorResponse(userLeavingErrorType = UserLeavingErrorType.INVALID_TOKEN)
         )
     }
 
     @MessageExceptionHandler(LobbyNotFoundException::class)
     fun handleLobbyNotFoundException(exception: LobbyNotFoundException) {
         wsUtil.sendInfoForOne(
-            exception.wsSendingUserId,
-            LeavingErrorResponse(leavingErrorType = LeavingErrorType.LOBBY_NOT_EXISTS)
+            exception.userId,
+            UserLeavingErrorResponse(userLeavingErrorType = UserLeavingErrorType.LOBBY_NOT_EXISTS)
         )
     }
 
@@ -32,7 +32,7 @@ class LobbyLeavingControllerAdvice(private val wsUtil: WebSocketUtil) {
     fun handleUserNotFoundInAnyLobbyException(exception: UserNotFoundInAnyLobbyException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LeavingErrorResponse(leavingErrorType = LeavingErrorType.ALREADY_NOT_IN_LOBBY)
+            UserLeavingErrorResponse(userLeavingErrorType = UserLeavingErrorType.ALREADY_NOT_IN_LOBBY)
         )
     }
 
@@ -40,7 +40,7 @@ class LobbyLeavingControllerAdvice(private val wsUtil: WebSocketUtil) {
     fun handleAttemptToLeaveFromLobbyInGameException(exception: AttemptToLeaveFromLobbyInGameException) {
         wsUtil.sendInfoForOne(
             exception.userId,
-            LeavingErrorResponse(leavingErrorType = LeavingErrorType.USER_IN_GAME)
+            UserLeavingErrorResponse(userLeavingErrorType = UserLeavingErrorType.USER_IN_GAME)
         )
     }
 }
