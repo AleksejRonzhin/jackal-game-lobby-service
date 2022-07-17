@@ -77,7 +77,7 @@ class LobbyService(private val repository: LobbyRepository) {
 
     private fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
         if (lobby.host!!.userId != userId) {
-            throw UserIsNotHostException()
+            throw UserNotIsHostException()
         }
     }
 

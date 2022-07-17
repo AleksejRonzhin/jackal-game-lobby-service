@@ -51,4 +51,10 @@ class LobbyControllerAdvice { // TODO 1 экзепшен здесь может �
     fun handleUserNotInAnyLobbyException(): ResponseEntity<GetLobbyConnectionInfoResponse> = ResponseEntity.ok(
         GetLobbyConnectionInfoResponse(responseStatus = GetLobbyConnectionInfoStatus.USER_NOT_IN_ANY_LOBBY)
     )
+
+    @ExceptionHandler(UserNotIsHostException::class)
+    @ResponseStatus(HttpStatus.OK)
+    fun handleUserIsNotHostException(): ResponseEntity<ChangeGameResponse> = ResponseEntity.ok(
+        ChangeGameResponse(responseStatus = ChangeGameStatus.USER_IS_NOT_LOBBY_HOST)
+    )
 }
