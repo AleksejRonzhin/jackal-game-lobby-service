@@ -15,4 +15,4 @@ WORKDIR $APP_HOME
 
 COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME .
 
-ENTRYPOINT java -Dsecurity.jwt.secret=$JWT_SECRET -jar $ARTIFACT_NAME
+ENTRYPOINT java -Dsecurity.jwt.secret=$LOBBY_JWT_SECRET -jar $ARTIFACT_NAME
