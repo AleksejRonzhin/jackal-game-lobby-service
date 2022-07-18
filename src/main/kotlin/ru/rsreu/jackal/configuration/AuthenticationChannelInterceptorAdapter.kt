@@ -6,7 +6,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.stereotype.Component
-import ru.rsreu.jackal.jwt.JwtTokenProvider
+import ru.rsreu.jackal.api.lobby.JwtTokenProvider
 
 @Component
 class AuthenticationChannelInterceptorAdapter(private val jwtTokenProvider: JwtTokenProvider) : ChannelInterceptor {

@@ -1,9 +1,0 @@
-package ru.rsreu.jackal.websocket.status_changing.dto
-
-import ru.rsreu.jackal.shared_models.LobbyMemberInfo
-import ru.rsreu.jackal.websocket.WebSocketResponseType
-
-data class UserChangedStatusInfoForAllResponse(
-    val type: WebSocketResponseType = WebSocketResponseType.CHANGED_STATE_INFO_FOR_ALL,
-    val lobbyMemberInfo: LobbyMemberInfo
-)
