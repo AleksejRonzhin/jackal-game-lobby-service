@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  lobby-service:
+    build: ./..
+    image: jackal-game-lobby-service
+    container_name: jackal-game-lobby-service
+    ports:
+      - "8081:8081"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+    restart: always
