@@ -9,6 +9,7 @@ open class HttpLobbyResponse(
 enum class HttpLobbyResponseStatus{
     OK,
     LOBBY_SERVICE_NOT_AVAILABLE,
+    LOBBY_SERVICE_FAIL,
     USER_ALREADY_IN_LOBBY,
     NOT_UNIQUE_LOBBY_TITLE,
     USER_NOT_FOUND,
@@ -18,5 +19,6 @@ enum class HttpLobbyResponseStatus{
     LOBBY_NOT_FOUND,
     WRONG_PASSWORD,
     USER_IN_LOBBY_BLACK_LIST,
-    LOBBY_IN_GAME
+    LOBBY_IN_GAME,
+    LOBBY_MEMBER_NOT_READY
 }

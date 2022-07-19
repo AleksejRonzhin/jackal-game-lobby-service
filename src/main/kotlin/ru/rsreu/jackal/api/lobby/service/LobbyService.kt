@@ -6,6 +6,7 @@ import ru.rsreu.jackal.api.lobby.repository.LobbyRepository
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.LobbyInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberInfo
+import ru.rsreu.jackal.shared_models.LobbyMemberStatus
 
 @Service
 class LobbyService(private val repository: LobbyRepository) {
@@ -65,7 +66,7 @@ class LobbyService(private val repository: LobbyRepository) {
         lobby.gameModeId = gameModeId
     }
 
-    private fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
+    fun checkUserIsHostOrThrow(lobby: Lobby, userId: Long) {
         if (lobby.host!!.userId != userId) {
             throw UserNotIsHostException()
         }
@@ -118,5 +119,19 @@ class LobbyService(private val repository: LobbyRepository) {
     fun kickUserFromLobby(hostId: Long, lobbyId: Long, kickableUserId: Long) {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(hostId))
         lobby.kickUser(hostId, kickableUserId)
+    }
+
+    fun checkLobbyIsReadyForStart(lobby: Lobby) {
+        checkLobbyNotInGameOrThrow(lobby)
+        checkAllMembersAreReadyOrThrow(lobby)
+    }
+
+    private fun checkAllMembersAreReadyOrThrow(lobby: Lobby) {
+        //TODO ping all
+        lobby.getAllMembers().forEach {
+            if (it.status != LobbyMemberStatus.READY) {
+                throw LobbyMemberNotReadyException()
+            }
+        }
     }
 }
