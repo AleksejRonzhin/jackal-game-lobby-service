@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import ru.rsreu.jackal.api.lobby.service.LobbyService
-import ru.rsreu.jackal.api.lobby.websocket.WebSocketResponseType
 import ru.rsreu.jackal.api.lobby.websocket.WebSocketUtil
 import ru.rsreu.jackal.api.lobby.websocket.leaving.dto.UserLeavedInfoForAllResponse
 import ru.rsreu.jackal.api.lobby.websocket.leaving.dto.UserLeavedInfoForOneResponse
@@ -28,7 +27,6 @@ class LobbyLeavingController(
         val newHostId = lobbyService.disconnectUserAndGetHostId(userId, lobbyId)
         wsUtil.sendInfoForOne(userId, UserLeavedInfoForOneResponse())
         return UserLeavedInfoForAllResponse(
-            WebSocketResponseType.LEAVED_INFO_FOR_ALL,
             userId,
             newHostId
         )

@@ -15,6 +15,10 @@ class WebSocketUtil(
         template.convertAndSend(webSocketParametersConfiguration.subscriptionUserPattern + userId, body)
     }
 
+    fun sendInfoForLobby(lobbyId: UUID, body: Any) {
+        template.convertAndSend(webSocketParametersConfiguration.subscriptionLobbyPattern + lobbyId, body)
+    }
+
     fun validateTokenForLobbyId(lobbyId: UUID, lobbyIdFromAuth: UUID, userId: Long) {
         if (lobbyId != lobbyIdFromAuth) {
             throw InvalidForLobbyTokenException(userId)

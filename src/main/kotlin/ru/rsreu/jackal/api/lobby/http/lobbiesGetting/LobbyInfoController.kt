@@ -30,7 +30,7 @@ class LobbyInfoController(
             GetInfoForStartResponse(
                 lobbyId = lobby.id,
                 userIds = lobby.getAllMembers().map { it.userId },
-                gameModeId = lobby.gameModeId,
+                gameModeId = lobby.gameModeId ?: 1, // TODO Проверка на  null и не стартуем если null. Или по другому решить вопрос с режимом. Леха я в тебя верю
                 responseStatus = HttpResponseStatus.OK
             )
         )

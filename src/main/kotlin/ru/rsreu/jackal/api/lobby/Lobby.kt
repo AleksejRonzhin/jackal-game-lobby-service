@@ -83,4 +83,16 @@ class Lobby(
         blackList.add(kickableUserId)
         members.remove(memberToKick)
     }
+
+    fun setAllMembersInGame() {
+        members.forEach {
+            it.status = LobbyMemberStatus.IN_GAME
+        }
+    }
+
+    fun setAllMembersNotReady() {
+        members.forEach {
+            it.status = LobbyMemberStatus.NOT_READY
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package ru.rsreu.jackal.api.lobby.websocket
 
-enum class WebSocketResponseType {
+enum class WebSocketMessageType {
     CONNECTED_INFO_FOR_ALL,
     CONNECTED_INFO_FOR_ONE,
     CONNECTION_ERROR,
@@ -11,5 +11,7 @@ enum class WebSocketResponseType {
     CHANGING_STATE_ERROR,
     KICKED_INFO_FOR_ALL,
     KICKED_INFO_FOR_ONE,
-    KICKING_ERROR
+    KICKING_ERROR,
+    CHECK_CONNECTION_REQUEST,
+    LOBBY_NOT_READY_INFO_FOR_ALL
 }
