@@ -3,9 +3,10 @@ package ru.rsreu.jackal.api.lobby
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberStatus
+import java.util.*
 
 class Lobby(
-    val id: Long,
+    val id: UUID,
     val title: String,
     var password: String? = null,
     host: LobbyMemberInfo,

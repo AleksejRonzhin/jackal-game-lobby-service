@@ -10,6 +10,7 @@ import ru.rsreu.jackal.api.lobby.websocket.WebSocketResponseType
 import ru.rsreu.jackal.api.lobby.websocket.WebSocketUtil
 import ru.rsreu.jackal.api.lobby.websocket.leaving.dto.UserLeavedInfoForAllResponse
 import ru.rsreu.jackal.api.lobby.websocket.leaving.dto.UserLeavedInfoForOneResponse
+import java.util.*
 
 @Controller
 class LobbyLeavingController(
@@ -19,11 +20,11 @@ class LobbyLeavingController(
     @MessageMapping("/leave/{lobbyId}")
     @SendTo("/topic/lobby/{lobbyId}")
     fun leaveFromLobby(
-        @DestinationVariable lobbyId: Long,
+        @DestinationVariable lobbyId: UUID,
         authentication: Authentication
     ): UserLeavedInfoForAllResponse {
         val userId = authentication.principal.toString().toLong()
-        wsUtil.validateTokenForLobbyId(lobbyId, authentication.credentials.toString().toLong(), userId)
+        wsUtil.validateTokenForLobbyId(lobbyId, UUID.fromString(authentication.credentials.toString()), userId)
         val newHostId = lobbyService.disconnectUserAndGetHostId(userId, lobbyId)
         wsUtil.sendInfoForOne(userId, UserLeavedInfoForOneResponse())
         return UserLeavedInfoForAllResponse(

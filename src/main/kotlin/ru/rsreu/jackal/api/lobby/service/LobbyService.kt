@@ -7,10 +7,11 @@ import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.LobbyInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberStatus
+import java.util.*
 
 @Service
 class LobbyService(private val repository: LobbyRepository) {
-    fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long): Long {
+    fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long): Lobby {
         checkUserNotInAnyLobbyOrThrow(hostId)
         checkTitleIsUniqueOrThrow(lobbyTitle)
         return repository.createLobby(lobbyTitle, lobbyPassword, hostId)
@@ -28,14 +29,14 @@ class LobbyService(private val repository: LobbyRepository) {
         runCatching { getLobbyByTitleOrThrow(lobbyTitle) }.onSuccess { throw NotUniqueLobbyTitleException() }
     }
 
-    fun join(lobbyTitle: String, lobbyPassword: String? = null, userId: Long): Long {
+    fun join(lobbyTitle: String, lobbyPassword: String? = null, userId: Long): Lobby {
         checkUserNotInAnyLobbyOrThrow(userId)
         val lobby = getLobbyByTitleOrThrow(lobbyTitle)
         checkPasswordsOrThrow(lobby, lobbyPassword)
         checkUserNotInBlackListOrThrow(lobby, userId)
         checkLobbyNotInGameOrThrow(lobby)
         lobby.addUser(userId)
-        return lobby.id
+        return lobby
     }
 
     private fun getLobbyByTitleOrThrow(lobbyTitle: String) =
@@ -88,7 +89,7 @@ class LobbyService(private val repository: LobbyRepository) {
         return LobbyMemberInfo(lobbyMember.userId, lobbyMember.status)
     }
 
-    fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: Long): Pair<Long, List<LobbyMemberInfo>> {
+    fun connectUserAndGetHostIdAndAllMembers(userId: Long, lobbyId: UUID): Pair<Long, List<LobbyMemberInfo>> {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         lobby.connectUser(userId)
         return Pair(lobby.host!!.userId, lobby.getAllMembers())
@@ -98,7 +99,7 @@ class LobbyService(private val repository: LobbyRepository) {
         repository.findLobbyByUser(userId) ?: throw exception
 
 
-    fun disconnectUserAndGetHostId(userId: Long, lobbyId: Long): Long? {
+    fun disconnectUserAndGetHostId(userId: Long, lobbyId: UUID): Long? {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         lobby.disconnectUser(userId)
         val newHostId = lobby.host?.userId
@@ -108,15 +109,15 @@ class LobbyService(private val repository: LobbyRepository) {
         return newHostId
     }
 
-    private fun getLobbyByIdOrThrow(lobbyId: Long, exception: Throwable) =
+    private fun getLobbyByIdOrThrow(lobbyId: UUID, exception: Throwable) =
         repository.findLobbyById(lobbyId) ?: throw exception
 
-    fun changeUserStateAndGetInfo(userId: Long, lobbyId: Long): LobbyMemberInfo {
+    fun changeUserStateAndGetInfo(userId: Long, lobbyId: UUID): LobbyMemberInfo {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(userId))
         return lobby.changeMemberStateAndGetInfo(userId)
     }
 
-    fun kickUserFromLobby(hostId: Long, lobbyId: Long, kickableUserId: Long) {
+    fun kickUserFromLobby(hostId: Long, lobbyId: UUID, kickableUserId: Long) {
         val lobby = getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException(hostId))
         lobby.kickUser(hostId, kickableUserId)
     }

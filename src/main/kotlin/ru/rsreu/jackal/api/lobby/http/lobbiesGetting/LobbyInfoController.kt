@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import ru.rsreu.jackal.api.lobby.service.LobbyService
+import ru.rsreu.jackal.shared_models.HttpResponseStatus
 import ru.rsreu.jackal.shared_models.responses.GetAllLobbiesResponse
-import ru.rsreu.jackal.shared_models.responses.GetLobbyInfoForStartResponse
-import ru.rsreu.jackal.shared_models.responses.HttpLobbyResponseStatus
+import ru.rsreu.jackal.shared_models.responses.GetInfoForStartResponse
 
 @RestController
 @RequestMapping("/api/lobby")
@@ -18,20 +18,20 @@ class LobbyInfoController(
     @GetMapping("/all")
     fun getAll(): ResponseEntity<GetAllLobbiesResponse> {
         val lobbies = lobbyService.getAllLobbiesInfo()
-        return ResponseEntity.ok(GetAllLobbiesResponse(lobbies, responseStatus = HttpLobbyResponseStatus.OK))
+        return ResponseEntity.ok(GetAllLobbiesResponse(lobbies, responseStatus = HttpResponseStatus.OK))
     }
 
     @GetMapping("/info-for-start")
-    fun getInfoForStart(@RequestParam userId: Long): ResponseEntity<GetLobbyInfoForStartResponse> {
+    fun getInfoForStart(@RequestParam userId: Long): ResponseEntity<GetInfoForStartResponse> {
         val lobby = lobbyService.getLobbyByUserIdOrThrow(userId)
         lobbyService.checkUserIsHostOrThrow(lobby, userId)
         lobbyService.checkLobbyIsReadyForStart(lobby)
         return ResponseEntity.ok(
-            GetLobbyInfoForStartResponse(
+            GetInfoForStartResponse(
                 lobbyId = lobby.id,
                 userIds = lobby.getAllMembers().map { it.userId },
                 gameModeId = lobby.gameModeId,
-                responseStatus = HttpLobbyResponseStatus.OK
+                responseStatus = HttpResponseStatus.OK
             )
         )
     }

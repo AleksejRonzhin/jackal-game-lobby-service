@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController
 import ru.rsreu.jackal.api.lobby.JwtTokenProvider
 import ru.rsreu.jackal.api.lobby.service.LobbyService
 import ru.rsreu.jackal.api.lobby.websocket.WebSocketInfoCreator
+import ru.rsreu.jackal.shared_models.HttpResponseStatus
 import ru.rsreu.jackal.shared_models.requests.CreateLobbyRequest
-import ru.rsreu.jackal.shared_models.responses.CreateLobbyResponse
-import ru.rsreu.jackal.shared_models.responses.HttpLobbyResponseStatus
+import ru.rsreu.jackal.shared_models.responses.CreateResponse
 
 @RestController
 @RequestMapping("/api/lobby")
@@ -20,15 +20,15 @@ class LobbyCreatingController(
     private val jwtTokenProvider: JwtTokenProvider
 ) {
     @PostMapping("/create")
-    fun create(@RequestBody request: CreateLobbyRequest): ResponseEntity<CreateLobbyResponse> {
+    fun create(@RequestBody request: CreateLobbyRequest): ResponseEntity<CreateResponse> {
         val userId = request.hostId
-        val lobbyId = lobbyService.create(request.lobbyTitle, request.lobbyPassword, userId)
-        val webSocketInfo = webSocketInfoCreator.of(lobbyId, userId)
+        val lobby = lobbyService.create(request.lobbyTitle, request.lobbyPassword, userId)
+        val webSocketInfo = webSocketInfoCreator.of(lobby.id, userId)
         return ResponseEntity.ok(
-            CreateLobbyResponse(
+            CreateResponse(
                 webSocketInfo = webSocketInfo,
-                token = jwtTokenProvider.createAccessToken(lobbyId, userId),
-                responseStatus = HttpLobbyResponseStatus.OK
+                token = jwtTokenProvider.createAccessToken(lobby.id, userId),
+                responseStatus = HttpResponseStatus.OK
             )
         )
     }

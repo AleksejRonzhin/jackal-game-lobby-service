@@ -4,6 +4,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
 import ru.rsreu.jackal.configuration.WebSocketParametersConfiguration
 import ru.rsreu.jackal.exception.InvalidForLobbyTokenException
+import java.util.*
 
 @Component
 class WebSocketUtil(
@@ -14,7 +15,7 @@ class WebSocketUtil(
         template.convertAndSend(webSocketParametersConfiguration.subscriptionUserPattern + userId, body)
     }
 
-    fun validateTokenForLobbyId(lobbyId: Long, lobbyIdFromAuth: Long, userId: Long) {
+    fun validateTokenForLobbyId(lobbyId: UUID, lobbyIdFromAuth: UUID, userId: Long) {
         if (lobbyId != lobbyIdFromAuth) {
             throw InvalidForLobbyTokenException(userId)
         }
