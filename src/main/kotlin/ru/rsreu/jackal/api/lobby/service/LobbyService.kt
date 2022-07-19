@@ -3,6 +3,7 @@ package ru.rsreu.jackal.api.lobby.service
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.api.lobby.Lobby
 import ru.rsreu.jackal.api.lobby.repository.LobbyRepository
+import ru.rsreu.jackal.api.lobby.service.connection_checking.LobbyConnectionCheckingService
 import ru.rsreu.jackal.exception.*
 import ru.rsreu.jackal.shared_models.LobbyInfo
 import ru.rsreu.jackal.shared_models.LobbyMemberInfo
@@ -10,7 +11,10 @@ import ru.rsreu.jackal.shared_models.LobbyMemberStatus
 import java.util.*
 
 @Service
-class LobbyService(private val repository: LobbyRepository) {
+class LobbyService(
+    private val repository: LobbyRepository,
+    private val connectionCheckingService: LobbyConnectionCheckingService
+) {
     fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long): Lobby {
         checkUserNotInAnyLobbyOrThrow(hostId)
         checkTitleIsUniqueOrThrow(lobbyTitle)
@@ -125,10 +129,11 @@ class LobbyService(private val repository: LobbyRepository) {
     fun checkLobbyIsReadyForStart(lobby: Lobby) {
         checkLobbyNotInGameOrThrow(lobby)
         checkAllMembersAreReadyOrThrow(lobby)
+        lobby.setAllMembersInGame()
+        connectionCheckingService.checkLobbyMembersConnectionOrThrow(lobby)
     }
 
     private fun checkAllMembersAreReadyOrThrow(lobby: Lobby) {
-        //TODO ping all
         lobby.getAllMembers().forEach {
             if (it.status != LobbyMemberStatus.READY) {
                 throw LobbyMemberNotReadyException()

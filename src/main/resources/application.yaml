@@ -4,6 +4,7 @@ server:
 web_sockets:
   lobby_pattern: "/topic/lobby/"
   user_pattern: "/topic/client/"
+  connection_checker_delay-s: 5
 
 security:
   jwt:

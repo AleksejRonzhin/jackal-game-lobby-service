@@ -1,7 +1,6 @@
 package ru.rsreu.jackal.api.lobby.websocket.kicking.dto
 
-import ru.rsreu.jackal.api.lobby.websocket.WebSocketResponseType
+import ru.rsreu.jackal.api.lobby.websocket.WebSocketMessage
+import ru.rsreu.jackal.api.lobby.websocket.WebSocketMessageType
 
-data class UserKickedInfoForOneResponse(
-    val type: WebSocketResponseType = WebSocketResponseType.KICKED_INFO_FOR_ONE
-)
+class UserKickedInfoForOneResponse : WebSocketMessage(WebSocketMessageType.KICKED_INFO_FOR_ONE)

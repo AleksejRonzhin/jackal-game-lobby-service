@@ -1,5 +1,6 @@
 package ru.rsreu.jackal.api.lobby.websocket.leaving.dto
 
-import ru.rsreu.jackal.api.lobby.websocket.WebSocketResponseType
+import ru.rsreu.jackal.api.lobby.websocket.WebSocketMessage
+import ru.rsreu.jackal.api.lobby.websocket.WebSocketMessageType
 
-data class UserLeavedInfoForOneResponse(val type: WebSocketResponseType = WebSocketResponseType.LEAVED_INFO_FOR_ONE)
+class UserLeavedInfoForOneResponse : WebSocketMessage(WebSocketMessageType.LEAVED_INFO_FOR_ONE)
