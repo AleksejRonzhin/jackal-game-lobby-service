@@ -25,12 +25,13 @@ class LobbyInfoController(
     fun getInfoForStart(@RequestParam userId: Long): ResponseEntity<GetInfoForStartResponse> {
         val lobby = lobbyService.getLobbyByUserIdOrThrow(userId)
         lobbyService.checkUserIsHostOrThrow(lobby, userId)
+        lobbyService.checkGameIsSelectedOrThrow(lobby)
         lobbyService.checkLobbyIsReadyForStart(lobby)
         return ResponseEntity.ok(
             GetInfoForStartResponse(
                 lobbyId = lobby.id,
                 userIds = lobby.getAllMembers().map { it.userId },
-                gameModeId = lobby.gameModeId ?: 1, // TODO Проверка на  null и не стартуем если null. Или по другому решить вопрос с режимом. Леха я в тебя верю
+                gameModeId = lobby.gameModeId,
                 responseStatus = HttpResponseStatus.OK
             )
         )

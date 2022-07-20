@@ -37,6 +37,12 @@ class LobbyInfoControllerAdvice(private val wsUtil: WebSocketUtil) {
         GetInfoForStartResponse(responseStatus = HttpResponseStatus.LOBBY_MEMBER_NOT_READY)
     )
 
+    @ExceptionHandler(GameNotSelectedException::class)
+    @ResponseStatus(HttpStatus.OK)
+    fun handleGameNotSelectedException(): ResponseEntity<GetInfoForStartResponse> = ResponseEntity.ok(
+        GetInfoForStartResponse(responseStatus = HttpResponseStatus.GAME_NOT_SELECTED)
+    )
+
     @ExceptionHandler(UsersNotHaveActiveConnectionException::class)
     @ResponseStatus(HttpStatus.OK)
     fun handleUsersNotHaveActiveConnectionException(exception: UsersNotHaveActiveConnectionException): ResponseEntity<GetInfoForStartResponse> {
