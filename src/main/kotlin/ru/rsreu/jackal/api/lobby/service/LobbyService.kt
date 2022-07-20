@@ -15,10 +15,10 @@ class LobbyService(
     private val repository: LobbyRepository,
     private val connectionCheckingService: LobbyConnectionCheckingService
 ) {
-    fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long): Lobby {
+    fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long, gameModeId: Long): Lobby {
         checkUserNotInAnyLobbyOrThrow(hostId)
         checkTitleIsUniqueOrThrow(lobbyTitle)
-        return repository.createLobby(lobbyTitle, lobbyPassword, hostId)
+        return repository.createLobby(lobbyTitle, lobbyPassword, hostId, gameModeId)
     }
 
     private fun checkUserNotInAnyLobbyOrThrow(hostId: Long) {

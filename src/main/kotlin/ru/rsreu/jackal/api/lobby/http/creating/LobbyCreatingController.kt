@@ -22,7 +22,7 @@ class LobbyCreatingController(
     @PostMapping("/create")
     fun create(@RequestBody request: CreateLobbyRequest): ResponseEntity<CreateResponse> {
         val userId = request.hostId
-        val lobby = lobbyService.create(request.lobbyTitle, request.lobbyPassword, userId)
+        val lobby = lobbyService.create(request.lobbyTitle, request.lobbyPassword, userId, request.gameModeId)
         val webSocketInfo = webSocketInfoCreator.of(lobby.id, userId)
         return ResponseEntity.ok(
             CreateResponse(

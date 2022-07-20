@@ -9,8 +9,14 @@ import java.util.*
 class LobbyRepository {
     private val lobbies: MutableCollection<Lobby> = mutableListOf()
 
-    fun createLobby(title: String, password: String?, hostId: Long): Lobby {
-        val lobby = Lobby(id = UUID.randomUUID(), title = title, password = password, host = LobbyMemberInfo(hostId))
+    fun createLobby(title: String, password: String?, hostId: Long, gameModeId: Long): Lobby {
+        val lobby = Lobby(
+            id = UUID.randomUUID(),
+            title = title,
+            password = password,
+            host = LobbyMemberInfo(hostId),
+            gameModeId = gameModeId
+        )
         lobbies.add(lobby)
         return lobby
     }
