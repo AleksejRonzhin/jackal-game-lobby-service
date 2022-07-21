@@ -1,4 +1,4 @@
-package ru.rsreu.jackal.api.lobby.http.gameSessionConnectionInfoSending
+package ru.rsreu.jackal.api.lobby.http.gameSessionCreationInfoSending
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -11,12 +11,12 @@ import ru.rsreu.jackal.shared_models.requests.SendGameSessionConnectionInfoReque
 
 @RestController
 @RequestMapping("/api/lobby")
-class GameSessionConnectionInfoSendingController(private val sender: GameSessionConnectionInfoSender) {
+class GameSessionCreationInfoSendingController(private val sender: GameSessionCreationInfoSender) {
 
-    @PostMapping("/send-game-session-connection-info")
-    fun sendConnectionInfoToUsers(@RequestBody request: SendGameSessionConnectionInfoRequest)
+    @PostMapping("/send-game-session-creation-info")
+    fun sendCreationInfoToUsers(@RequestBody request: SendGameSessionConnectionInfoRequest)
             : ResponseEntity<HttpResponse> {
-        sender.sendInfo(request.playerInfos)
+        sender.sendInfo(request.lobbyId)
         return ResponseEntity.ok(HttpResponse(HttpResponseStatus.OK))
     }
 }
