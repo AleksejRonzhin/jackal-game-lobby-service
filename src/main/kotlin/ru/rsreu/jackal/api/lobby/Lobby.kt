@@ -95,4 +95,10 @@ class Lobby(
             it.status = LobbyMemberStatus.NOT_READY
         }
     }
+
+    fun setAllMembersReady() {
+        members.forEach {
+            it.status = LobbyMemberStatus.READY
+        }
+    }
 }

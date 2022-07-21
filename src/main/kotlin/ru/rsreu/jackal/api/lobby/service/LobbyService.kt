@@ -2,7 +2,6 @@ package ru.rsreu.jackal.api.lobby.service
 
 import org.springframework.stereotype.Service
 import ru.rsreu.jackal.api.lobby.Lobby
-import ru.rsreu.jackal.exception.GameNotSelectedException
 import ru.rsreu.jackal.api.lobby.repository.LobbyRepository
 import ru.rsreu.jackal.api.lobby.service.connection_checking.LobbyConnectionCheckingService
 import ru.rsreu.jackal.exception.*
@@ -143,8 +142,12 @@ class LobbyService(
     }
 
     fun checkGameIsSelectedOrThrow(lobby: Lobby) {
-        if(lobby.gameModeId == null){
+        if (lobby.gameModeId == null) {
             throw GameNotSelectedException()
         }
+    }
+
+    fun setAllMembersInLobbyReady(lobbyId: UUID) {
+        getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).setAllMembersReady()
     }
 }
