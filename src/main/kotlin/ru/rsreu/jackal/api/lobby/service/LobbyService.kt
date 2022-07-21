@@ -157,4 +157,9 @@ class LobbyService(
 
     fun getAllMembersInfo(lobbyId: UUID) =
         getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).getAllMembers()
+
+    fun finishGame(userId: Long) {
+        val lobby = getLobbyByUserIdOrThrow(userId)
+        lobby.finish(userId)
+    }
 }
