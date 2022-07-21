@@ -19,6 +19,7 @@ class GameRejectedInfoController(val sender: GameRejectedInfoSender, val lobbySe
         val lobbyId = UUID.fromString(request.lobbyId)
         sender.sendGameRejectedInfoForLobby(lobbyId, request.notConnectedUserIds)
         lobbyService.setAllMemberInLobbyNotReady(lobbyId)
+        sender.sendChangingStatusInfosForLobby(lobbyId, lobbyService.getAllMembersInfo(lobbyId))
         return ResponseEntity.ok(HttpResponse(HttpResponseStatus.OK))
     }
 }

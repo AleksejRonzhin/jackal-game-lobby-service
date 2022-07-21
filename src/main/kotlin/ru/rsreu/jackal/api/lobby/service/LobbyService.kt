@@ -154,4 +154,7 @@ class LobbyService(
     fun setAllMemberInLobbyNotReady(lobbyId: UUID) {
         getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).setAllMembersNotReady()
     }
+
+    fun getAllMembersInfo(lobbyId: UUID) =
+        getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).getAllMembers()
 }
