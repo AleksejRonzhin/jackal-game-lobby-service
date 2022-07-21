@@ -19,7 +19,7 @@ class GameSessionCreationErrorHandlerController(
     @PostMapping("/send-creation-error-info")
     fun sendCreationErrorInfoToLobby(@RequestBody request: GameSessionCreationErrorRequest): ResponseEntity<HttpResponse> {
         sender.sendErrorInfoForAll(request.lobbyId, request.error)
-        lobbyService.setAllMembersInLobbyReady(request.lobbyId)
+        lobbyService.rollbackLobby(request.lobbyId)
         return ResponseEntity.ok(HttpResponse(HttpResponseStatus.OK))
     }
 }

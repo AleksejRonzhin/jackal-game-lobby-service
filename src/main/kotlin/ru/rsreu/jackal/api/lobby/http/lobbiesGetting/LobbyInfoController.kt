@@ -27,6 +27,8 @@ class LobbyInfoController(
         lobbyService.checkUserIsHostOrThrow(lobby, userId)
         lobbyService.checkGameIsSelectedOrThrow(lobby)
         lobbyService.checkLobbyIsReadyForStart(lobby)
+        lobbyService.startGame(lobby)
+        lobbyService.checkConnection(lobby)
         return ResponseEntity.ok(
             GetInfoForStartResponse(
                 lobbyId = lobby.id,

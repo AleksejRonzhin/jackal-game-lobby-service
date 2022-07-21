@@ -12,8 +12,7 @@ import java.util.*
 
 @Service
 class LobbyService(
-    private val repository: LobbyRepository,
-    private val connectionCheckingService: LobbyConnectionCheckingService
+    private val repository: LobbyRepository, private val connectionCheckingService: LobbyConnectionCheckingService
 ) {
     fun create(lobbyTitle: String, lobbyPassword: String? = null, hostId: Long, gameModeId: Long): Lobby {
         checkUserNotInAnyLobbyOrThrow(hostId)
@@ -113,7 +112,7 @@ class LobbyService(
         return newHostId
     }
 
-    private fun getLobbyByIdOrThrow(lobbyId: UUID, exception: Throwable) =
+    private fun getLobbyByIdOrThrow(lobbyId: UUID, exception: Throwable = LobbyNotFoundException()) =
         repository.findLobbyById(lobbyId) ?: throw exception
 
     fun changeUserStateAndGetInfo(userId: Long, lobbyId: UUID): LobbyMemberInfo {
@@ -129,7 +128,14 @@ class LobbyService(
     fun checkLobbyIsReadyForStart(lobby: Lobby) {
         checkLobbyNotInGameOrThrow(lobby)
         checkAllMembersAreReadyOrThrow(lobby)
+    }
+
+    fun startGame(lobby: Lobby) {
+        lobby.isInGame = true
         lobby.setAllMembersInGame()
+    }
+
+    fun checkConnection(lobby: Lobby) {
         connectionCheckingService.checkLobbyMembersConnectionOrThrow(lobby)
     }
 
@@ -147,19 +153,29 @@ class LobbyService(
         }
     }
 
-    fun setAllMembersInLobbyReady(lobbyId: UUID) {
-        getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).setAllMembersReady()
+    fun rollbackLobby(lobbyId: UUID) {
+        val lobby = getLobbyByIdOrThrow(lobbyId)
+        lobby.isInGame = false
+        lobby.setAllMembersReady()
     }
 
     fun setAllMemberInLobbyNotReady(lobbyId: UUID) {
-        getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).setAllMembersNotReady()
+        getLobbyByIdOrThrow(lobbyId).setAllMembersNotReady()
     }
 
-    fun getAllMembersInfo(lobbyId: UUID) =
-        getLobbyByIdOrThrow(lobbyId, LobbyNotFoundException()).getAllMembers()
+    fun getAllMembersInfo(lobbyId: UUID) = getLobbyByIdOrThrow(lobbyId).getAllMembers()
 
-    fun finishGame(userId: Long) {
+    fun userFinishGame(userId: Long): Pair<UUID, LobbyMemberInfo> {
         val lobby = getLobbyByUserIdOrThrow(userId)
         lobby.finish(userId)
+        val memberInfo = lobby.getAllMembers().find { it.userId == userId }
+        return Pair(lobby.id, memberInfo!!)
+    }
+
+    fun finishGame(lobbyId: UUID): Collection<LobbyMemberInfo> {
+        val lobby = getLobbyByIdOrThrow(lobbyId)
+        lobby.isInGame = false
+        lobby.setAllMembersNotReady()
+        return lobby.getAllMembers()
     }
 }
