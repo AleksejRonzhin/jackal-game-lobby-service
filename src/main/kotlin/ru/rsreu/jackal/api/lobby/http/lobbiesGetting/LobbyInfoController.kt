@@ -24,16 +24,11 @@ class LobbyInfoController(
     @GetMapping("/info-for-start")
     fun getInfoForStart(@RequestParam userId: Long): ResponseEntity<GetInfoForStartResponse> {
         val lobby = lobbyService.getLobbyByUserIdOrThrow(userId)
+        lobbyService.checkUserIsHostOrThrow(lobby, userId)
+        lobbyService.checkGameIsSelectedOrThrow(lobby)
+        lobbyService.checkLobbyIsReadyForStart(lobby)
         lobby.startGame()
-        try {
-            lobbyService.checkUserIsHostOrThrow(lobby, userId)
-            lobbyService.checkGameIsSelectedOrThrow(lobby)
-            lobbyService.checkLobbyIsReadyForStart(lobby)
-            lobbyService.checkConnection(lobby)
-        } catch (e: Exception) {
-            lobby.refuseGame()
-            throw e
-        }
+        lobbyService.checkConnection(lobby)
         return ResponseEntity.ok(
             GetInfoForStartResponse(
                 lobbyId = lobby.id,
