@@ -131,6 +131,7 @@ class LobbyService(
     }
 
     fun checkConnection(lobby: Lobby) {
+        lobby.startGame()
         connectionCheckingService.checkLobbyMembersConnectionOrThrow(lobby)
     }
 
