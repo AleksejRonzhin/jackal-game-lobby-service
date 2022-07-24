@@ -130,11 +130,6 @@ class LobbyService(
         checkAllMembersAreReadyOrThrow(lobby)
     }
 
-    fun startGame(lobby: Lobby) {
-        lobby.isInGame = true
-        lobby.setAllMembersInGame()
-    }
-
     fun checkConnection(lobby: Lobby) {
         connectionCheckingService.checkLobbyMembersConnectionOrThrow(lobby)
     }

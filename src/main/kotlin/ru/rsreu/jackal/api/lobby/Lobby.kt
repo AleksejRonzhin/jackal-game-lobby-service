@@ -105,4 +105,14 @@ class Lobby(
     fun finish(userId: Long) {
         members.find { it.userId == userId }?.status = LobbyMemberStatus.NOT_READY
     }
+
+    fun startGame() {
+        isInGame = true
+        setAllMembersInGame()
+    }
+
+    fun refuseGame() {
+        isInGame = false
+        setAllMembersNotReady()
+    }
 }

@@ -24,7 +24,6 @@ class LobbyConnectionCheckingService(
         val notConnectedUsersIds = task.notConnectedUsersIds ?: emptyList()
         repository.removeByLobbyId(lobby.id)
         if (notConnectedUsersIds.isNotEmpty()) {
-            lobby.setAllMembersNotReady()
             throw UsersNotHaveActiveConnectionException(lobby, notConnectedUsersIds.toList())
         }
     }
